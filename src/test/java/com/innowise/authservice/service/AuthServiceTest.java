@@ -59,6 +59,7 @@ class AuthServiceTest {
         dto.setId(0L);
         dto.setEmail("some@email.com");
         dto.setPassword("asldks2193i");
+        dto.setRole("ADMIN");
         dto.setLogin("login");
 
         String accessToken = "access-token";
