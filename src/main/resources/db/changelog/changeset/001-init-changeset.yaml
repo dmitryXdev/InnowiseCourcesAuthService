@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tables
+      author: admin
+      changes:
+        - sqlFile:
+            path: sql/create-refresh-tokens-table.sql
+            relativeToChangelogFile: true
+        - sqlFile:
+            path: sql/create-users-table.sql
+            relativeToChangelogFile: true
