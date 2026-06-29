@@ -1,7 +1,7 @@
 services:
   auth-service:
     build: .
-    container_name: auth-service-container
+    container_name: auth-service
     ports:
       - "8080:8080"
     environment:
@@ -23,14 +23,13 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pg_auth_data:/var/lib/postgresql/data
     networks:
       - java-network
     restart: always
 
 volumes:
-  pgdata:
-  redis-data:
+  pg_auth_data:
 
 networks:
   java-network:

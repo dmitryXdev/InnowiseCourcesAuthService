@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
-public class RegisterUserDto {
+public class CreateUserDto {
     @NotNull
     private Long id;
     @NotNull

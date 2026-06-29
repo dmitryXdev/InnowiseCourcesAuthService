@@ -2,9 +2,9 @@ name: UserService CI pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
 
@@ -39,6 +39,6 @@ jobs:
           mvn sonar:sonar \
             -Dsonar.host.url=$SONAR_HOST_URL \
             -Dsonar.login=$SONAR_TOKEN
-          
+
       - name: Build docker image
         run: docker build -t auth-service:latest .

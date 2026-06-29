@@ -4,6 +4,7 @@ import com.innowise.authservice.exception.BadIncomingDataException;
 import com.innowise.authservice.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -21,7 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadIncomingDataException.class)
     public ResponseEntity<ErrorResponse> badIncomingData(BadIncomingDataException e) {
-        return ResponseEntity.internalServerError().body(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ErrorResponse.builder()
                         .message(e.getMessage())
                         .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -31,10 +32,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> entityNotFound(EntityNotFoundException e) {
-        return ResponseEntity.internalServerError().body(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ErrorResponse.builder()
                         .message(e.getMessage())
                         .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> entityNotFound(AccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                ErrorResponse.builder()
+                        .message(e.getMessage())
+                        .statusCode(HttpStatus.FORBIDDEN.value())
                         .build()
         );
     }

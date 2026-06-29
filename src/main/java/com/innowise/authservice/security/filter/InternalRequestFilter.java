@@ -1,4 +1,4 @@
-package com.innowise.authservice.httpfilter;
+package com.innowise.authservice.security.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,12 +30,12 @@ public class InternalRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
 
-        if(path == null || !path.startsWith("/auth") || path.equals("/auth/login")) {
+        if (path == null || !path.startsWith("/auth") || path.equals("/auth/login")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if(!secret.equals(request.getHeader(internalSecretHeader))) {
+        if (!secret.equals(request.getHeader(internalSecretHeader))) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             return;
         }
@@ -47,7 +47,7 @@ public class InternalRequestFilter extends OncePerRequestFilter {
         );
 
         SecurityContextHolder.getContext()
-                        .setAuthentication(authentication);
+                .setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }

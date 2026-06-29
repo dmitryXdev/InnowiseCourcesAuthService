@@ -9,7 +9,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 public class TestConfig {
     @Bean
     @ServiceConnection
-    public PostgreSQLContainer postgreSQLContainer(){
+    public PostgreSQLContainer postgreSQLContainer() {
         return new PostgreSQLContainer("postgres:16-alpine")
                 .withDatabaseName("testDb")
                 .withPassword("test")

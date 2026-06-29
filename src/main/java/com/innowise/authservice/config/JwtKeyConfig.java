@@ -54,7 +54,7 @@ public class JwtKeyConfig {
     }
 
     @Bean
-    public JwtEncoder jwtEncoder(RSAKey rsaKey){
+    public JwtEncoder jwtEncoder(RSAKey rsaKey) {
         JWKSet jwkSet = new JWKSet(rsaKey);
 
         return new NimbusJwtEncoder(new ImmutableJWKSet<>(jwkSet));

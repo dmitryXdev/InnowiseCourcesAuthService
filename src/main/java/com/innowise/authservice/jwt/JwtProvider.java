@@ -56,7 +56,7 @@ public class JwtProvider {
 
             Instant instant = jwt.getExpiresAt();
 
-            if(instant == null) return false;
+            if (instant == null) return false;
 
             return !instant.isBefore(Instant.now());
         } catch (Exception e) {

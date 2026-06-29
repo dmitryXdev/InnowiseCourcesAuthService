@@ -3,7 +3,7 @@ package com.innowise.authservice.service;
 import com.innowise.authservice.dao.UserRepository;
 import com.innowise.authservice.dto.AuthDto;
 import com.innowise.authservice.dto.AuthResponseDto;
-import com.innowise.authservice.dto.RegisterUserDto;
+import com.innowise.authservice.dto.CreateUserDto;
 import com.innowise.authservice.dto.TokenValidationRequestDto;
 import com.innowise.authservice.dto.TokenValidationResponseDto;
 import com.innowise.authservice.jwt.JwtProvider;
@@ -55,7 +55,7 @@ class AuthServiceTest {
 
     @Test
     void saveUser_shouldSaveUserAndReturnJwtTokens() {
-        RegisterUserDto dto = new RegisterUserDto();
+        CreateUserDto dto = new CreateUserDto();
         dto.setId(0L);
         dto.setEmail("some@email.com");
         dto.setPassword("asldks2193i");

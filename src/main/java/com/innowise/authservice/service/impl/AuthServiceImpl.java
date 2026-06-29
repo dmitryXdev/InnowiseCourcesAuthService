@@ -3,7 +3,7 @@ package com.innowise.authservice.service.impl;
 import com.innowise.authservice.dao.UserRepository;
 import com.innowise.authservice.dto.AuthDto;
 import com.innowise.authservice.dto.AuthResponseDto;
-import com.innowise.authservice.dto.RegisterUserDto;
+import com.innowise.authservice.dto.CreateUserDto;
 import com.innowise.authservice.dto.TokenValidationRequestDto;
 import com.innowise.authservice.dto.TokenValidationResponseDto;
 import com.innowise.authservice.exception.BadIncomingDataException;
@@ -30,16 +30,23 @@ public class AuthServiceImpl implements AuthService {
 
     private static final String USER_NOT_FOUND_MESSAGE = "User not found";
 
+    /**
+     * Saves user, generates and returns access tokens.
+     *
+     * @param dto - CreateUserDto
+     * @return AuthResponseDto
+     * @throws BadIncomingDataException - incoming data is incorrect.
+     */
     @Override
     @Transactional
-    public AuthResponseDto saveUser(RegisterUserDto dto) {
-        if(dto == null) {
+    public AuthResponseDto saveUser(CreateUserDto dto) {
+        if (dto == null) {
             throw new BadIncomingDataException("Bad incoming data");
         }
 
         User user = userRepository.findById(dto.getId()).orElse(null);
 
-        if(user != null) {
+        if (user != null) {
             throw new BadIncomingDataException("User already exists");
         }
 
@@ -68,23 +75,30 @@ public class AuthServiceImpl implements AuthService {
         return response;
     }
 
+    /**
+     * Validates user credentials and returns access tokens.
+     *
+     * @param authDto - AuthDto
+     * @return AuthResponseDto
+     * @throws BadIncomingDataException - if incoming data is incorrect
+     */
     @Override
     @Transactional
     public AuthResponseDto loginUser(AuthDto authDto) {
-        if(authDto == null) {
+        if (authDto == null) {
             throw new BadIncomingDataException("Bad incoming data");
         }
 
         User user = userRepository.findByLogin(authDto.getLogin()).orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND_MESSAGE));
 
-        if(!passwordEncoder.matches(authDto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(authDto.getPassword(), user.getPassword())) {
             throw new BadIncomingDataException("Invalid credentials");
         }
 
         String newRefreshToken = jwtProvider.generateRefreshToken(user);
 
         RefreshToken token = user.getToken();
-        if(token == null) {
+        if (token == null) {
             token = new RefreshToken();
         }
 
@@ -98,9 +112,15 @@ public class AuthServiceImpl implements AuthService {
         return authResponseDto;
     }
 
+    /**
+     * Validates token. Used by internal services.
+     *
+     * @param dto
+     * @return TokenValidationResponse
+     */
     @Override
     public TokenValidationResponseDto validateToken(TokenValidationRequestDto dto) {
-        if(!jwtProvider.validateToken(dto.getToken())) {
+        if (!jwtProvider.validateToken(dto.getToken())) {
             return TokenValidationResponseDto.builder()
                     .valid(false)
                     .role(null)
@@ -117,9 +137,17 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    /**
+     * Refreshes access token.
+     *
+     * @param refreshToken
+     * @return String - raw access token
+     * @throws BadIncomingDataException - if refresh token is invalid.
+     * @throws EntityNotFoundException - if user that linked to the token is not found.
+     */
     @Override
     public String refreshToken(String refreshToken) {
-        if(!jwtProvider.validateToken(refreshToken)) {
+        if (!jwtProvider.validateToken(refreshToken)) {
             throw new BadIncomingDataException("Bad token");
         }
 
