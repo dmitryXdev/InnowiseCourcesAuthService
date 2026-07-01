@@ -7,9 +7,6 @@ import com.innowise.authservice.dto.CreateUserDto;
 import com.innowise.authservice.dto.UpdateUserDto;
 import com.innowise.authservice.dto.UserDto;
 import com.innowise.authservice.model.Role;
-import com.innowise.authservice.model.User;
-import com.innowise.authservice.service.AuthService;
-import com.innowise.authservice.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +26,6 @@ import tools.jackson.databind.ObjectMapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Import(TestConfig.class)
-public class UserControllerTest {
+class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 

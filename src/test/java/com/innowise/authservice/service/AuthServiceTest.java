@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +44,7 @@ class AuthServiceTest {
     private AuthServiceImpl authService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         authService = new AuthServiceImpl(userRepository, passwordEncoder, jwtProvider);
     }
 
@@ -130,6 +131,23 @@ class AuthServiceTest {
 
     @Test
     void refreshToken_shouldGetNewAccessToken() {
+        String token = "new-access-token";
 
+        Jwt jwt = mock(Jwt.class);
+
+        when(jwtProvider.validateToken(any())).thenReturn(true);
+        when(jwtProvider.getJwtInstanceFromString(any(String.class))).thenReturn(jwt);
+        when(jwt.getSubject()).thenReturn("0");
+        when(jwtProvider.generateAccessToken(any())).thenReturn(token);
+
+        User user = new User();
+        user.setId(0L);
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+
+        String newToken = authService.refreshToken("refresh-token");
+
+        assertNotNull(newToken);
+        assertEquals(token, newToken);
     }
 }
